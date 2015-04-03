@@ -41,17 +41,20 @@ int main(int argc, char **argv) {
         } else {
             fputs("Could not convert the number", stderr);
         }
-        
+
     }
 
     return 0;
 }
 
-int prompt_number(const char *prompt, unsigned int *number, unsigned int base)
-    {
-        char *string = readline(prompt);
-        if(string == NULL) {return -1; }; 
-        if(parse_number(string, base, number)) { return -1; };
+int prompt_number(const char *prompt, unsigned int *number, unsigned int base) {
+    char *string = readline(prompt);
+    if(string == NULL) {return -1; }; 
+    if(parse_number(string, base, number)) {
+        free(string);
+        return -1;
+    };
 
-        return 0;
-    }
+    free(string);
+    return 0;
+}
