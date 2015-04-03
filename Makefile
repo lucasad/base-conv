@@ -1,4 +1,4 @@
-LIBS = -lreadline
+CFLAGS += -I.
 
 converter: base-conv.o main.o 
 	$(CC) -o converter base-conv.o main.o $(LIBS) $(CFLAGS) 

@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h> // for free(3)
-#include <readline/readline.h>
+#include <readline.h>
 
 #include "base-conv.h"
 
