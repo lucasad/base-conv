@@ -20,10 +20,19 @@ void test_serialize(void) {
     assert(strcmp(serialize_number(0xDEADBEEF, 16, buf), "DEADBEEF") == 0);
 }
 
+void test_digit_char(void) {
+    assert(char_to_digit('A') == 10);
+    assert(char_to_digit('3') == 3);
+
+    assert(digit_to_char(35) == 'Z');
+    assert(digit_to_char(10) == 'A');
+}
+
 
 int main(void) {
     test_parse();
     test_serialize();
+    test_digit_char();
 
     return 0;
 }
