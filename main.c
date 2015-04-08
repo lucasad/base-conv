@@ -1,7 +1,8 @@
 #include <unistd.h>
 #include <stdio.h>
-#include <stdlib.h> // for free(3)
+#include <stdlib.h> /* for free(3) */
 #include <readline.h>
+#include <ctype.h> /* for isspace(3) */
 
 #include "base-conv.h"
 
@@ -50,8 +51,22 @@ int main(int argc, char **argv) {
 
 int prompt_number(const char *prompt, unsigned int *number, unsigned int base) {
     char *string = readline(prompt);
+    int start=0;
     if(string == NULL) {return -1; }; 
-    if(parse_number(string, base, number)) {
+
+    { /* Trim Whitespace */
+        int i,j;
+        for(i=strlen(string)-1;i;--i) {
+            if(isspace(string[i])) {
+                string[i] = 0;
+            } else {
+                break;
+            }
+        }
+        while(isspace(string[start])) ++start;
+    }
+
+    if(parse_number(string+start, base, number)) {
         free(string);
         return -1;
     };
