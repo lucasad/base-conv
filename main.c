@@ -20,27 +20,27 @@ int main(int argc, char **argv) {
         while(from < 2) {
             if(prompt_number("From: ", &from, 10)) {
                 from = 0;
-                fputs("You must give a number", stderr);
+                fputs("You must give a number\n", stderr);
             } else if(from < 2) fputs("You must give a number greater than two\n", stderr);
         }
         while(to < 2) {
             if(prompt_number("To: ", &to, 10)) {
                 to = 0;
-                fputs("You must give a number", stderr);
+                fputs("You must give a number\n", stderr);
             } else if(to < 2) fputs("You must give a number greater than two\n", stderr);
         }
 
         printf("Converting from base-%d to base-%d\n", from, to);
 
         if(prompt_number("Number: ", &number, from)) {
-            fputs("You must enter a valid number in that base (case-sensitive… A is 10, a is 42\n",stderr);
+            fputs("You must enter a valid number in that base (case-sensitive... A is 10, a is 42)\n",stderr);
             fflush(stderr);
         }
 
         if((converted=serialize_number(number, (unsigned char) to, buf))) {
             puts(converted);
         } else {
-            fputs("Could not convert the number", stderr);
+            fputs("Could not convert the number\n", stderr);
         }
 
     }
