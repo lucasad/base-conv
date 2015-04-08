@@ -2,11 +2,14 @@
 #define READLINE_FALLBACK_H
 
 #include <stdio.h>
+#include <string.h>
 
 char* readline(const char * prompt) {
-    char *result;
+    char *result = malloc(1);
+    size_t n = 0;
     printf("%s", prompt);
-    scanf("%ms", &result); 
+    getline(&result, &n, stdin);
+    result[strlen(result)-1] = 0;
     return result;
 }
 
