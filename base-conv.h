@@ -1,5 +1,5 @@
 #ifndef BASE_CONV_H
-#define BASE_CANV_H
+#define BASE_CONV_H
 
 int parse_number(const char *string, unsigned char base, unsigned *number); 
 char* serialize_number(unsigned int number, unsigned char base, char *buf); 
