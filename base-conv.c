@@ -1,9 +1,5 @@
-#include <unistd.h>
 #include <string.h>
 #include "base-conv.h"
-
-#define ever {;;}
-
 
 char char_to_digit(char chr) {
     return (chr-'0') < 10 ? (chr-'0') : (chr-'A'+10);
