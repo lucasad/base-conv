@@ -21,8 +21,7 @@ EOF
 }
 
 use_readline() {
-    INCLUDES=(/usr/include/readline* /usr/local/include/readline*)
-    for dir in $INCLUDES
+    for dir in `echo /usr/include/readline* /usr/local/include/readline*`
     do if [ -f "$dir/readline.h" ]; then
         CFLAGS="-I$dir"
     fi
@@ -38,11 +37,10 @@ use_readline() {
         LIBS=-l/usr/local/lib 
     fi
 
-    (fgrep RL_VERSION $dir/readline.h ; echo RL_VERSION_MAJOR RL_VERSION_MINOR)| cpp | tail -n1 | read major minor
-    echo "Using readline version $major.$minor"
+    (echo "#include <readline.h>"; echo "Using readline version RL_VERSION_MAJOR.RL_VERSION_MINOR")| cpp $CFLAGS| fgrep 'Using readline version'
 
     cat >> config.mk <<EOF
-LIBS += $LDFLAGS -lreadline
+LIBS += $LDFLAGS -lreadline -ltermcap
 CFLAGS += $CFLAGS
 EOF
     return 1
