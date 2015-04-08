@@ -1,3 +1,5 @@
+include config.mk
+
 CFLAGS += -I.
 
 converter: base-conv.o main.o 

@@ -1,0 +1,105 @@
+#!/bin/sh
+
+clear_config() {
+    echo > config.mk
+}
+
+use_libedit() {
+    pkg-config libedit
+    if [ $? -ne 0 ]; then 
+        echo "Could not find libedit"
+        return 1
+    fi
+
+    print "Using libedit version $(pkg-config --modversion libedit)" 
+
+    cat >> config.mk <<EOF
+LIBS += $(pkg-config --libs libedit)
+CFLAGS += $(pkg-config --cflags libedit)
+EOF
+    return 0
+}
+
+use_readline() {
+    INCLUDES=(/usr/include/readline* /usr/local/include/readline*)
+    for dir in $INCLUDES
+    do if [ -f "$dir/readline.h" ]; then
+        CFLAGS="-I$dir"
+    fi
+    done
+
+    if [ -z "$CFLAGS" ]; then
+        echo "Unable to find readline"
+        return 1
+    fi
+
+
+    if echo $CFLAGS | grep /usr/local 2>&1 > /dev/null; then
+        LIBS=-l/usr/local/lib 
+    fi
+
+    (fgrep RL_VERSION $dir/readline.h ; echo RL_VERSION_MAJOR RL_VERSION_MINOR)| cpp | tail -n1 | read major minor
+    echo "Using readline version $major.$minor"
+
+    cat >> config.mk <<EOF
+LIBS += $LDFLAGS -lreadline
+CFLAGS += $CFLAGS
+EOF
+    return 1
+}
+
+use_othercompat() {
+    echo "Using other library or builtin"
+
+    cat >> config.mk <<EOF
+LIBS += $1
+CFLAGS += $2
+EOF
+    return 1 
+}
+
+while [ $# -gt 0 ]
+do case $1 in
+    --use-readline)
+        USE=readline
+        ;;
+    --use-libedit)
+        USE=libedit
+        ;;
+    --use-other)
+        shift
+        USE=other
+        OTHER=$1
+        ;;
+    --help)
+        cat << EOF
+Usage: ./configure [--help]
+                   [--use-readline]
+                   [--use-libedit]
+                   [--use-other <LDFLAGS> <CFLAGS>]
+EOF
+        exit 0
+        ;;
+esac
+
+shift
+done
+
+case $USE in
+    readline)
+        clear_config
+        use_readline
+        ;;
+    libedit)
+        clear_config
+        use_libedit
+        ;;
+    other)
+        clear_config
+        use_other $OTHER       
+        ;;
+    "")
+        clear_config
+        use_libedit || use_readline
+        ;;
+esac
