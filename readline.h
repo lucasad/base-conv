@@ -5,10 +5,9 @@
 #include <string.h>
 
 char* readline(const char * prompt) {
-    char *result = malloc(1);
-    size_t n = 0;
+    char *result = malloc(1024);
     printf("%s", prompt);
-    getline(&result, &n, stdin);
+    fgets(result, 1023, stdin);
     result[strlen(result)-1] = 0;
     return result;
 }
