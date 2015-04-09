@@ -14,8 +14,8 @@ use_libedit() {
     print "Using libedit version $(pkg-config --modversion libedit)" 
 
     cat >> config.mk <<EOF
-LIBS += $(pkg-config --libs libedit)
-CFLAGS += $(pkg-config --cflags libedit)
+LIBS := $$(LIBS) $(pkg-config --libs libedit)
+CFLAGS := $$(CFLAGS) $(pkg-config --cflags libedit)
 EOF
     return 0
 }
@@ -40,8 +40,8 @@ use_readline() {
     (echo "#include <readline.h>"; echo "Using readline version RL_VERSION_MAJOR.RL_VERSION_MINOR")| cpp $CFLAGS| fgrep 'Using readline version'
 
     cat >> config.mk <<EOF
-LIBS += $LDFLAGS -lreadline -ltermcap
-CFLAGS += $CFLAGS
+LIBS := $$(LIBS) $LDFLAGS -lreadline -ltermcap
+CFLAGS := $$(CFLAGS) $CFLAGS
 EOF
     return 1
 }
@@ -87,17 +87,21 @@ case $USE in
     readline)
         clear_config
         use_readline
+        exit $?
         ;;
     libedit)
         clear_config
         use_libedit
+        exit $?
         ;;
     other)
         clear_config
         use_other $OTHER       
+        exit 0
         ;;
     "")
         clear_config
-        use_libedit || use_readline
+        use_libedit || use_readline || { use_other '' '-I.'; }
+        exit 0
         ;;
 esac
