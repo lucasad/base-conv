@@ -14,8 +14,8 @@ use_libedit() {
     print "Using libedit version $(pkg-config --modversion libedit)" 
 
     cat >> config.mk <<EOF
-LIBS := $$(LIBS) $(pkg-config --libs libedit)
-CFLAGS := $$(CFLAGS) $(pkg-config --cflags libedit)
+LIBS := \$(LIBS) $(pkg-config --libs libedit)
+CFLAGS := \$(CFLAGS) $(pkg-config --cflags libedit)
 EOF
     return 0
 }
@@ -40,10 +40,10 @@ use_readline() {
     (echo "#include <readline.h>"; echo "Using readline version RL_VERSION_MAJOR.RL_VERSION_MINOR")| cpp $CFLAGS| fgrep 'Using readline version'
 
     cat >> config.mk <<EOF
-LIBS := $$(LIBS) $LDFLAGS -lreadline -ltermcap
-CFLAGS := $$(CFLAGS) $CFLAGS
+LIBS := \$(LIBS) $LDFLAGS -lreadline -ltermcap
+CFLAGS := \$(CFLAGS) $CFLAGS
 EOF
-    return 1
+    return 0
 }
 
 use_othercompat() {
@@ -53,7 +53,7 @@ use_othercompat() {
 LIBS += $1
 CFLAGS += $2
 EOF
-    return 1 
+    return 0 
 }
 
 while [ $# -gt 0 ]
