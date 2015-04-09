@@ -3,7 +3,7 @@
 #include <assert.h>
 
 void test_parse(void) {
-    unsigned int parsed;
+    uint64_t parsed;
     parse_number("1234", 10, &parsed);
     assert(parsed == 1234);
 
